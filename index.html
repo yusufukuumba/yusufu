@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SokaScore - Live Scores</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Live Football Scores</h1>
+    <div id="scores"></div>
+
+    <script>
+        function fetchScores() {
+            $.get('live_scores.php', function(data) {
+                let html = '';
+                if (data.matches) {
+                    data.matches.forEach(function(match) {
+                        const score = match.score.fullTime;
+                        html += '<p>' + match.homeTeam.name + ' ' + 
+                                (score.homeTeam !== null ? score.homeTeam : '0') + 
+                                ' - ' + 
+                                (score.awayTeam !== null ? score.awayTeam : '0') + 
+                                ' ' + match.awayTeam.name + '</p>';
+                    });
+                } else {
+                    html = '<p>No live matches right now.</p>';
+                }
+                $('#scores').html(html);
+            });
+        }
+
+        fetchScores();
+        setInterval(fetchScores, 30000); // Refresh every 30 seconds
+    </script>
+</body>
+</html>
